@@ -44,7 +44,7 @@ class Skeleton {
   Skin skin;
   Color color = Color(1.0, 1.0, 1.0, 1.0);
   double time = 0.0;
-  bool flipX = false, flipY = false;
+  double scaleX = 1.0, scaleY = 1.0;
   double x = 0.0, y = 0.0;
 
   Skeleton(this.data) {
@@ -483,7 +483,7 @@ class Skeleton {
         verticesLength = 8;
         vertices = Float32List.fromList(
             ArrayUtils.setArraySize(temp, verticesLength, 0.0));
-        region.computeWorldVertices2(slot.bone, vertices, 0, 2);
+        region.computeWorldVertices(slot.bone, vertices, 0, 2);
       } else if (attachment is MeshAttachment) {
         final MeshAttachment mesh = attachment;
         verticesLength = mesh.worldVerticesLength;

@@ -198,7 +198,7 @@ class SkeletonBounds {
     return false;
   }
 
-  Float32List AnimationStateData(BoundingBoxAttachment boundingBox) {
+  Float32List getPolygon(BoundingBoxAttachment boundingBox) {
     if (boundingBox == null) throw ArgumentError('boundingBox cannot be null.');
     final int index = boundingBoxes.indexOf(boundingBox);
     return index == -1 ? null : polygons[index];

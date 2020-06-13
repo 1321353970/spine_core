@@ -30,7 +30,7 @@
 
 part of spine_core;
 
-class RegionAttachment extends VertexAttachment {
+class RegionAttachment extends Attachment {
   static const int ox1 = 0;
   static const int oy1 = 1;
   static const int ox2 = 2;
@@ -98,13 +98,15 @@ class RegionAttachment extends VertexAttachment {
   void updateOffset() {
     final double regionScaleX = width / region.originalWidth * scaleX;
     final double regionScaleY = height / region.originalHeight * scaleY;
-    final double localX = -width / 2 * scaleX + region.offsetX * regionScaleX;
-    final double localY = -height / 2 * scaleY + region.offsetY * regionScaleY;
+    final double localX = -width * 0.5 * scaleX + region.offsetX * regionScaleX;
+    final double localY = -height * 0.5 * scaleY + region.offsetY * regionScaleY;
     final double localX2 = localX + region.width * regionScaleX;
     final double localY2 = localY + region.height * regionScaleY;
+
     final double radians = rotation * math.pi / 180;
     final double cos = math.cos(radians);
     final double sin = math.sin(radians);
+
     final double localXCos = localX * cos + x;
     final double localXSin = localX * sin;
     final double localYCos = localY * cos + y;
@@ -113,7 +115,9 @@ class RegionAttachment extends VertexAttachment {
     final double localX2Sin = localX2 * sin;
     final double localY2Cos = localY2 * cos + y;
     final double localY2Sin = localY2 * sin;
+
     final Float32List offset = this.offset;
+
     offset[RegionAttachment.ox1] = localXCos - localYSin;
     offset[RegionAttachment.oy1] = localYCos + localXSin;
     offset[RegionAttachment.ox2] = localXCos - localY2Sin;
@@ -148,7 +152,7 @@ class RegionAttachment extends VertexAttachment {
     }
   }
 
-  void computeWorldVertices2(
+  void computeWorldVertices(
       Bone bone, Float32List worldVertices, int offset, int stride) {
     final Float32List vertexOffset = this.offset;
     final double x = bone.worldX, y = bone.worldY;

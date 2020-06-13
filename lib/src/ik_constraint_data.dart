@@ -36,6 +36,9 @@ class IkConstraintData {
   int order = 0;
   BoneData target;
   int bendDirection = 1;
+  bool compress = false;
+  bool stretch = false;
+  bool uniform = false;
   double mix = 1.0;
 
   IkConstraintData(this.name) {

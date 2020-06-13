@@ -146,7 +146,9 @@ class SkeletonJson {
         data
           ..bendDirection =
               _getBool(constraintMap, 'bendPositive', true) ? 1 : -1
-          ..mix = _getDouble(constraintMap, 'mix', 1.0);
+          ..mix = _getDouble(constraintMap, 'mix', 1.0)
+          ..stretch = _getBool(constraintMap, 'mix', false)
+          ..uniform = _getBool(constraintMap, 'uniform', false);
 
         skeletonData.ikConstraints.add(data);
       }

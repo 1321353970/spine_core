@@ -45,34 +45,76 @@ class MeshAttachment extends VertexAttachment {
   MeshAttachment(String name) : super(name);
 
   void updateUVs() {
+    // final regionUVs = this.regionUVs;
+    if (uvs == null || uvs.length != regionUVs.length)
+      uvs = Float32List(regionUVs.length);
+    // final uvs = this.uvs;
     double u = 0.0, v = 0.0, width = 0.0, height = 0.0;
-    if (region == null) {
-      u = v = 0.0;
-      width = height = 1.0;
+    if (region is TextureAtlasRegion) {
+      final TextureAtlasRegion textureRegion = region;
+      final double textureWidth = textureRegion.texture.width;
+      final double textureHeight = textureRegion.texture.height;
+      if (region.rotate) {
+        u = region.u - (region.originalHeight - region.offsetY - region.height) / textureWidth;
+        v = region.v - (region.originalWidth - region.offsetX - region.width) / textureHeight;
+        width = region.originalHeight / textureWidth;
+        height = region.originalWidth / textureHeight;
+        for (int i = 0; i < uvs.length; i += 2) {
+          uvs[i] = u + regionUVs[i + 1] * width;
+          uvs[i + 1] = v + height - regionUVs[i] * height;
+        }
+        return;
+      }
+      u = region.u - region.offsetX / textureWidth;
+      v = region.v - (region.originalHeight - region.offsetY - region.height) / textureHeight;
+      width = region.originalWidth / textureWidth;
+      height = region.originalHeight / textureHeight;
+    } else if (region == null) {
+      u = v = 0;
+			width = height = 1;
     } else {
       u = region.u;
       v = region.v;
       width = region.u2 - u;
       height = region.v2 - v;
+		}
+
+    for (int i = 0; i < uvs.length; i += 2) {
+      uvs[i] = u + regionUVs[i] * width;
+      uvs[i + 1] = v + regionUVs[i + 1] * height;
     }
-    final Float32List regionUVs = this.regionUVs;
-    if (this.uvs == null || this.uvs.length != regionUVs.length)
-      this.uvs = Float32List(regionUVs.length);
-    final Float32List uvs = this.uvs;
-    if (region.rotate) {
-      final int n = uvs.length;
-      for (int i = 0; i < n; i += 2) {
-        uvs[i] = u + regionUVs[i + 1] * width;
-        uvs[i + 1] = v + height - regionUVs[i] * height;
-      }
-    } else {
-      final int n = uvs.length;
-      for (int i = 0; i < n; i += 2) {
-        uvs[i] = u + regionUVs[i] * width;
-        uvs[i + 1] = v + regionUVs[i + 1] * height;
-      }
-    }
+
   }
+
+  // void updateUVs() {
+  //   double u = 0.0, v = 0.0, width = 0.0, height = 0.0;
+  //   if (region == null) {
+  //     u = v = 0.0;
+  //     width = height = 1.0;
+  //   } else {
+  //     u = region.u;
+  //     v = region.v;
+  //     width = region.u2 - u;
+  //     height = region.v2 - v;
+  //   }
+  //   final Float32List regionUVs = this.regionUVs;
+  //   if (this.uvs == null || this.uvs.length != regionUVs.length)
+  //     this.uvs = Float32List(regionUVs.length);
+  //   final Float32List uvs = this.uvs;
+  //   if (region.rotate) {
+  //     final int n = uvs.length;
+  //     for (int i = 0; i < n; i += 2) {
+  //       uvs[i] = u + regionUVs[i + 1] * width;
+  //       uvs[i + 1] = v + height - regionUVs[i] * height;
+  //     }
+  //   } else {
+  //     final int n = uvs.length;
+  //     for (int i = 0; i < n; i += 2) {
+  //       uvs[i] = u + regionUVs[i] * width;
+  //       uvs[i + 1] = v + regionUVs[i + 1] * height;
+  //     }
+  //   }
+  // }
 
   @override
   bool applyDeform(VertexAttachment sourceAttachment) =>
@@ -80,16 +122,16 @@ class MeshAttachment extends VertexAttachment {
       (inheritDeform && _parentMesh == sourceAttachment);
 
   MeshAttachment get parentMesh => _parentMesh;
-  set parentMesh(MeshAttachment value) {
-    _parentMesh = value;
-    if (value != null) {
-      bones = value.bones;
-      vertices = value.vertices;
-      worldVerticesLength = value.worldVerticesLength;
-      regionUVs = value.regionUVs;
-      triangles = value.triangles;
-      hullLength = value.hullLength;
-      worldVerticesLength = value.worldVerticesLength;
+  set parentMesh(MeshAttachment parentMesh) {
+    _parentMesh = parentMesh;
+    if (parentMesh != null) {
+      bones = parentMesh.bones;
+      vertices = parentMesh.vertices;
+      worldVerticesLength = parentMesh.worldVerticesLength;
+      regionUVs = parentMesh.regionUVs;
+      triangles = parentMesh.triangles;
+      hullLength = parentMesh.hullLength;
+      worldVerticesLength = parentMesh.worldVerticesLength;
     }
   }
 }

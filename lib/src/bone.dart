@@ -86,28 +86,16 @@ class Bone implements Updatable {
 
     if (parent == null) {
       // Root bone.
-      final double rotationY = rotation + 90 + shearY;
-      double la = MathUtils.cosDeg(rotation + shearX) * scaleX;
-      double lb = MathUtils.cosDeg(rotationY) * scaleY;
-      double lc = MathUtils.sinDeg(rotation + shearX) * scaleX;
-      double ld = MathUtils.sinDeg(rotationY) * scaleY;
       final Skeleton skeleton = this.skeleton;
-      if (skeleton.flipX) {
-        x = -x;
-        la = -la;
-        lb = -lb;
-      }
-      if (skeleton.flipY) {
-        y = -y;
-        lc = -lc;
-        ld = -ld;
-      }
-      a = la;
-      b = lb;
-      c = lc;
-      d = ld;
-      worldX = x + skeleton.x;
-      worldY = y + skeleton.y;
+      final double rotationY = rotation + 90 + shearY;
+      final double sx = skeleton.scaleX;
+      final double sy = skeleton.scaleY;
+      a = MathUtils.cosDeg(rotation + shearX) * scaleX * sx;
+      b = MathUtils.cosDeg(rotationY) * scaleY * sx;
+      c = MathUtils.sinDeg(rotation + shearX) * scaleX * sy;
+      d = MathUtils.sinDeg(rotationY) * scaleY * sy;
+      worldX = x * sx + skeleton.x;
+      worldY = y * sy + skeleton.y;
       return;
     }
 
@@ -183,12 +171,6 @@ class Bone implements Updatable {
           final double lb = MathUtils.cosDeg(90 + shearY) * scaleY;
           final double lc = MathUtils.sinDeg(shearX) * scaleX;
           final double ld = MathUtils.sinDeg(90 + shearY) * scaleY;
-          if (data.transformMode != TransformMode.NoScaleOrReflection
-              ? pa * pd - pb * pc < 0
-              : skeleton.flipX != skeleton.flipY) {
-            zb = -zb;
-            zd = -zd;
-          }
           a = za * la + zb * lc;
           b = za * lb + zb * ld;
           c = zc * la + zd * lc;
@@ -196,16 +178,10 @@ class Bone implements Updatable {
           return;
         }
     }
-
-    if (skeleton.flipX) {
-      a = -a;
-      b = -b;
-    }
-
-    if (skeleton.flipY) {
-      c = -c;
-      d = -d;
-    }
+    a *= skeleton.scaleX;
+    b *= skeleton.scaleX;
+    c *= skeleton.scaleY;
+    d *= skeleton.scaleY;
   }
 
   void setToSetupPose() {

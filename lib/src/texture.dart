@@ -33,7 +33,10 @@ part of spine_core;
 abstract class Texture {
   dynamic image;
 
-  Texture(this.image);
+  double width;
+  double height;
+
+  Texture(this.image, this.width, this.height);
 
   void setFilters(TextureFilter minFilter, TextureFilter magFilter);
   void setWraps(TextureWrap uWrap, TextureWrap vWrap);
@@ -105,7 +108,7 @@ class TextureRegion {
 }
 
 class FakeTexture extends Texture {
-  FakeTexture([dynamic image]) : super(image);
+  FakeTexture([dynamic image]) : super(image, 100.0, 100.0);
   @override
   void setFilters(TextureFilter minFilter, TextureFilter magFilter) {}
   @override

@@ -2,6 +2,8 @@
 
 The spine_core runtime provides functionality to load and manipulate [Spine](http://esotericsoftware.com) skeletal animation data using [Dart](https://www.dartlang.org/). It does not perform rendering but can be extended to enable Spine animations for other Dart-based projects.
 
+## update according to spine-ts 3.7 branch
+
 ## Spine License
 This Spine Runtime may only be used for personal or internal use, typically to evaluate Spine before purchasing. If you would like to incorporate a Spine Runtime into your applications, distribute software containing a Spine Runtime, or modify a Spine Runtime, then you will need a valid [Spine license](https://esotericsoftware.com/spine-purchase). Please see the [Spine Runtimes Software License](http://esotericsoftware.com/git/spine-runtimes/blob/LICENSE) for detailed information.
 
